@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS vehicle_types (
   vehicle_type_id  TEXT        NOT NULL,
   form_factor      TEXT,
   propulsion_type  TEXT,
-  max_range_meters INTEGER,
+  max_range_meters REAL,
   name             TEXT,
   updated_at       TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   PRIMARY KEY (system_id, vehicle_type_id)
@@ -54,7 +54,7 @@ CREATE TABLE IF NOT EXISTS vehicle_types (
 CREATE TABLE IF NOT EXISTS station_snapshots (
   time                      TIMESTAMPTZ  NOT NULL,
   station_id                TEXT         NOT NULL,
-  system_id                 TEXT         NOT NULL DEFAULT 'bixi-montreal',
+  system_id                 TEXT         NOT NULL,
   num_bikes_available       SMALLINT     NOT NULL,
   num_ebikes_available      SMALLINT     NOT NULL DEFAULT 0,
   num_docks_available       SMALLINT     NOT NULL,
@@ -73,7 +73,7 @@ CREATE INDEX IF NOT EXISTS idx_snapshots_lookup ON station_snapshots (system_id,
 
 CREATE TABLE IF NOT EXISTS system_alerts (
   time               TIMESTAMPTZ  NOT NULL,
-  system_id          TEXT         NOT NULL DEFAULT 'bixi-montreal',
+  system_id          TEXT         NOT NULL,
   alert_id           TEXT         NOT NULL,
   type               TEXT,
   summary            TEXT,
@@ -87,7 +87,7 @@ CREATE TABLE IF NOT EXISTS system_alerts (
 
 CREATE TABLE IF NOT EXISTS weather_observations (
   time             TIMESTAMPTZ  NOT NULL,
-  system_id        TEXT         NOT NULL DEFAULT 'bixi-montreal',
+  system_id        TEXT         NOT NULL,
   temperature_c    REAL,
   feels_like_c     REAL,
   precipitation_mm REAL,
@@ -104,7 +104,7 @@ CREATE TABLE IF NOT EXISTS weather_observations (
 CREATE TABLE IF NOT EXISTS trip_history (
   start_time         TIMESTAMPTZ  NOT NULL,
   start_station_code TEXT         NOT NULL,
-  system_id          TEXT         NOT NULL DEFAULT 'bixi-montreal',
+  system_id          TEXT         NOT NULL,
   end_time           TIMESTAMPTZ  NOT NULL,
   end_station_code   TEXT         NOT NULL,
   duration_sec       INTEGER      NOT NULL,
@@ -119,7 +119,7 @@ CREATE INDEX IF NOT EXISTS idx_trips_end_station ON trip_history (system_id, end
 
 CREATE TABLE IF NOT EXISTS events (
   event_id            SERIAL           PRIMARY KEY,
-  system_id           TEXT             NOT NULL DEFAULT 'bixi-montreal',
+  system_id           TEXT             NOT NULL,
   name                TEXT             NOT NULL,
   start_date          DATE             NOT NULL,
   end_date            DATE             NOT NULL,
@@ -138,7 +138,7 @@ CREATE TABLE IF NOT EXISTS events (
 CREATE TABLE IF NOT EXISTS features_cache (
   time                  TIMESTAMPTZ  NOT NULL,
   station_id            TEXT         NOT NULL,
-  system_id             TEXT         NOT NULL DEFAULT 'bixi-montreal',
+  system_id             TEXT         NOT NULL,
   bikes_available       SMALLINT,
   ebikes_available      SMALLINT,
   docks_available       SMALLINT,

@@ -29,11 +29,11 @@ jobs:
         run: terraform validate
 
   migrations:
-    name: SQL Syntax Check
+    name: SQL Migrations
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: timescale/timescaledb:latest-pg16
+        image: timescale/timescaledb:2.17.2-pg16
         env:
           POSTGRES_USER: bixi
           POSTGRES_PASSWORD: bixi
@@ -51,4 +51,7 @@ jobs:
       - name: Apply migrations
         env:
           PGPASSWORD: bixi
-        run: psql -h localhost -U bixi -d bixi -f migrations/001_initial_schema.sql
+        run: |
+          psql -h localhost -U bixi -d bixi -f migrations/001_initial_schema.sql
+          psql -h localhost -U bixi -d bixi -f migrations/002_add_hypertables.sql
+          psql -h localhost -U bixi -d bixi -f migrations/003_schema_fixes.sql
