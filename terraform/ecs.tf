@@ -52,7 +52,7 @@ resource "aws_ecs_task_definition" "api" {
     }
 
     healthCheck = {
-      command     = ["CMD-SHELL", "wget -qO- http://localhost:8080/health || exit 1"]
+      command     = ["CMD-SHELL", "wget -qO- http://localhost:8080/healthz || exit 1"]
       interval    = 30
       timeout     = 5
       retries     = 3
@@ -132,7 +132,7 @@ resource "aws_lb_target_group" "api" {
   target_type = "ip"
 
   health_check {
-    path                = "/health"
+    path                = "/healthz"
     healthy_threshold   = 2
     unhealthy_threshold = 3
     interval            = 30
