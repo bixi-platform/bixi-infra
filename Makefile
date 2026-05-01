@@ -1,5 +1,5 @@
 DATABASE_URL     ?= postgres://bixi:bixi@localhost:5433/bixi
-DATABASE_URL_DEV ?= postgres://bixi:bixi@localhost:5434/bixi
+DATABASE_URL_DEV ?= postgres://bixi:bixi@localhost:5433/bixi
 
 # AWS config for LocalStack (used by awslocal / tflocal)
 export AWS_DEFAULT_REGION    ?= ca-central-1
@@ -26,7 +26,11 @@ down:
 
 migrate:
 	nerdctl cp migrations/001_initial_schema.sql bixi-db:/tmp/
+	nerdctl cp migrations/002_add_hypertables.sql bixi-db:/tmp/
+	nerdctl cp migrations/003_schema_fixes.sql bixi-db:/tmp/
 	nerdctl exec bixi-db psql -U bixi -d bixi -f /tmp/001_initial_schema.sql
+	nerdctl exec bixi-db psql -U bixi -d bixi -f /tmp/002_add_hypertables.sql
+	nerdctl exec bixi-db psql -U bixi -d bixi -f /tmp/003_schema_fixes.sql
 
 # Wipe the DB volume and re-create (destructive — dev only)
 reset:
@@ -115,5 +119,6 @@ test-inference-lambda:
 
 migrate-aws:
 	@echo "Applying schema to RDS (DATABASE_URL must point to prod RDS)"
-	PGPASSWORD=$$(echo $(DATABASE_URL) | sed 's/.*:\(.*\)@.*/\1/') \
-		psql "$(DATABASE_URL)" -f migrations/001_initial_schema.sql
+	psql "$(DATABASE_URL)" -f migrations/001_initial_schema.sql
+	psql "$(DATABASE_URL)" -f migrations/002_add_hypertables.sql
+	psql "$(DATABASE_URL)" -f migrations/003_schema_fixes.sql

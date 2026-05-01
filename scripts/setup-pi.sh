@@ -5,7 +5,7 @@
 
 set -euo pipefail
 
-GO_VERSION="1.24.2"
+GO_VERSION="1.25.0"
 PG_VERSION="16"
 DB_NAME="bixi"
 DB_USER="bixi"
@@ -151,8 +151,10 @@ Next steps (run manually):
        rsync -av bixi-infra/ pi@<PI_IP>:~/bixi/bixi-infra/
        rsync -av bixi-collector/ pi@<PI_IP>:~/bixi/bixi-collector/
 
-  2. Run DB migrations:
+  2. Run DB migrations (Pi uses native PostgreSQL on port 5432, not the nerdctl container):
        psql postgres://bixi:bixi@localhost:5432/bixi -f ~/bixi/bixi-infra/migrations/001_initial_schema.sql
+       psql postgres://bixi:bixi@localhost:5432/bixi -f ~/bixi/bixi-infra/migrations/002_add_hypertables.sql
+       psql postgres://bixi:bixi@localhost:5432/bixi -f ~/bixi/bixi-infra/migrations/003_schema_fixes.sql
 
   3. Build and install the collector:
        cd ~/bixi/bixi-collector

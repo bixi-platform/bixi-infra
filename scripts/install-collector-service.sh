@@ -7,6 +7,7 @@ set -euo pipefail
 
 BINARY="$HOME/bin/bixi-collector"
 CONFIG="$HOME/bixi/bixi-collector/config.yaml"
+# Pi runs native PostgreSQL on 5432 — not the nerdctl container (which uses 5433 on dev laptops).
 DB_URL="postgres://bixi:bixi@localhost:5432/bixi"
 USER=$(whoami)
 

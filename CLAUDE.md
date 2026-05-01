@@ -27,7 +27,7 @@ make migrate   # Apply pending migrations in order
 make reset     # Wipe DB and re-migrate — DEV ONLY, never production
 ```
 
-Database connection (dev): `postgres://bixi:bixi@localhost:5434/bixi`
+Database connection (dev): `postgres://bixi:bixi@localhost:5433/bixi`
 
 ---
 
@@ -52,8 +52,8 @@ Database connection (dev): `postgres://bixi:bixi@localhost:5434/bixi`
 
 ## Known Pitfalls
 
-### TimescaleDB on port 5434
-System PostgreSQL occupies 5432. BIXI TimescaleDB runs on **5434**. Every psql/DATABASE_URL must specify port 5434 explicitly.
+### TimescaleDB on port 5433
+System PostgreSQL occupies 5432. BIXI TimescaleDB runs on **5433**. Every psql/DATABASE_URL must specify port 5433 explicitly.
 
 ### nerdctl requires Rancher Desktop running
 `make up` will fail silently if the Rancher Desktop VM is not started. Check with `nerdctl ps` before diagnosing anything else.
