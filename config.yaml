@@ -1,0 +1,22 @@
+systems:
+  - name: bixi-montreal
+    gbfs_url: "https://gbfs.velobixi.com/gbfs/2-2/gbfs.json"
+    language: "en"
+    poll_interval_sec: 120
+    weather_lat: 45.50
+    weather_lon: -73.57
+
+  # Uncomment to add more cities (Phase 4)
+  # - name: velocite-mulhouse
+  #   gbfs_url: "https://api.cyclocity.fr/contracts/mulhouse/gbfs/gbfs.json"
+  #   language: "fr"
+  #   poll_interval_sec: 120
+  #   weather_lat: 47.75
+  #   weather_lon: 7.34
+
+  # - name: citibike-nyc
+  #   gbfs_url: "https://gbfs.citibikenyc.com/gbfs/2.3/gbfs.json"
+  #   language: "en"
+  #   poll_interval_sec: 120
+  #   weather_lat: 40.71
+  #   weather_lon: -74.01

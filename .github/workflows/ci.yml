@@ -1,0 +1,57 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+
+jobs:
+  terraform:
+    name: Terraform Validate
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: terraform
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v3
+
+      - name: Format check
+        run: terraform fmt -check -recursive
+
+      - name: Init (local backend, no real provider)
+        run: terraform init -backend=false
+
+      - name: Validate
+        run: terraform validate
+
+  migrations:
+    name: SQL Migrations
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: timescale/timescaledb:2.17.2-pg16
+        env:
+          POSTGRES_USER: bixi
+          POSTGRES_PASSWORD: bixi
+          POSTGRES_DB: bixi
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Apply migrations
+        env:
+          PGPASSWORD: bixi
+        run: |
+          psql -h localhost -U bixi -d bixi -f migrations/001_initial_schema.sql
+          psql -h localhost -U bixi -d bixi -f migrations/002_add_hypertables.sql
+          psql -h localhost -U bixi -d bixi -f migrations/003_schema_fixes.sql
